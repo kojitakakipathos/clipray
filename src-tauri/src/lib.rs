@@ -1,14 +1,13 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use base64::{engine::general_purpose, Engine};
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use rusqlite::{Connection, Result};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, State, Window, Wry};
 use tauri_plugin_clipboard::Clipboard;
-use tauri_plugin_global_shortcut::{GlobalShortcut, GlobalShortcutExt, Shortcut};
-use tauri_plugin_window_state::WindowExt;
+use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ClipboardItem {
@@ -60,7 +59,7 @@ impl DatabaseManager {
             [],
         );
         let _ = conn.execute(
-            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('hotkey', 'CommandOrControl+Shift+V')",
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('hotkey', 'CommandOrControl+Alt+V')",
             [],
         );
 
@@ -164,7 +163,7 @@ impl DatabaseManager {
                 [],
                 |row| row.get(0),
             )
-            .unwrap_or_else(|_| "CommandOrControl+Shift+V".to_string());
+            .unwrap_or_else(|_| "CommandOrControl+Alt+V".to_string());
 
         Ok(AppConfig {
             max_history_count,
@@ -260,15 +259,18 @@ async fn update_config(
             .parse::<Shortcut>()
             .map_err(|e| format!("Invalid hotkey format: {}", e))?;
 
+        let window_clone = window.clone();
+        shortcut_manager
+            .on_shortcut(hotkey, move |_app, _shortcut, _event| {
+                let _ = window_clone.emit("show-clipboard", ());
+                let _ = window_clone.show();
+                let _ = window_clone.set_focus();
+            })
+            .map_err(|e| format!("Failed to set hotkey handler: {}", e))?;
+
         shortcut_manager
             .register(hotkey)
             .map_err(|e| format!("Failed to register new hotkey: {}", e))?;
-
-        window
-            .emit("show-clipboard", ())
-            .map_err(|e| e.to_string())?;
-        window.show().map_err(|e| e.to_string())?;
-        window.set_focus().map_err(|e| e.to_string())?;
     }
 
     // 設定を保存
@@ -323,7 +325,28 @@ pub fn run() {
             app.manage(db);
 
             let shortcut_manager = app_handle.global_shortcut();
-            shortcut_manager.register(shortcut).unwrap();
+            let window = app_handle.get_webview_window("main").unwrap();
+            let window_clone = window.clone();
+
+            // ホットキーのイベントハンドラを設定
+            if let Err(e) =
+                shortcut_manager.on_shortcut(shortcut, move |_app, _shortcut, _event| {
+                    let _ = window_clone.emit("show-clipboard", ());
+                    let _ = window_clone.show();
+                    let _ = window_clone.set_focus();
+                })
+            {
+                eprintln!("Failed to set hotkey handler: {}", e);
+            }
+
+            // ホットキーを登録（失敗してもアプリケーションは継続）
+            if let Err(e) = shortcut_manager.register(shortcut) {
+                eprintln!("Failed to register hotkey '{}': {}", config.hotkey, e);
+                eprintln!("The hotkey might already be in use by another application.");
+                eprintln!("You can change the hotkey in the settings.");
+            } else {
+                println!("Hotkey '{}' registered successfully!", config.hotkey);
+            }
 
             // クリップボード監視を開始
             let handle = app_handle.clone();
