@@ -1,0 +1,167 @@
+use chrono::Utc;
+use rusqlite::{Connection, Result};
+use std::path::PathBuf;
+use std::sync::Mutex;
+
+use crate::types::{AppConfig, ClipboardItem};
+
+// データベース接続を管理する構造体
+pub struct DatabaseManager {
+    connection: Mutex<Connection>,
+}
+
+impl DatabaseManager {
+    pub fn new(db_path: PathBuf) -> Result<Self> {
+        let conn = Connection::open(db_path)?;
+
+        // テーブル作成
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS clipboard_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,
+                content_type TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                pinned BOOLEAN DEFAULT FALSE
+            )",
+            [],
+        )?;
+
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS app_config (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )",
+            [],
+        )?;
+
+        // デフォルト設定を挿入
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('max_history_count', '50')",
+            [],
+        );
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('hotkey', 'CommandOrControl+Alt+V')",
+            [],
+        );
+
+        Ok(DatabaseManager {
+            connection: Mutex::new(conn),
+        })
+    }
+
+    pub fn add_clipboard_item(&self, content: &str, content_type: &str) -> Result<()> {
+        let conn = self.connection.lock().unwrap();
+        let timestamp = Utc::now().to_rfc3339();
+
+        // 同じ内容が既にある場合は削除（重複を避ける）
+        conn.execute(
+            "DELETE FROM clipboard_history WHERE content = ?1 AND content_type = ?2",
+            [content, content_type],
+        )?;
+
+        // 新しいアイテムを追加
+        conn.execute(
+            "INSERT INTO clipboard_history (content, content_type, timestamp, pinned) VALUES (?1, ?2, ?3, FALSE)",
+            [content, content_type, &timestamp],
+        )?;
+
+        // 履歴数制限を適用（ピン留めされていないもののみ）
+        let max_count: i32 = conn
+            .query_row(
+                "SELECT value FROM app_config WHERE key = 'max_history_count'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or(50);
+
+        conn.execute(
+            "DELETE FROM clipboard_history WHERE id IN (
+                SELECT id FROM clipboard_history 
+                WHERE pinned = FALSE 
+                ORDER BY timestamp DESC 
+                LIMIT -1 OFFSET ?1
+            )",
+            [max_count],
+        )?;
+
+        Ok(())
+    }
+
+    pub fn get_clipboard_history(&self) -> Result<Vec<ClipboardItem>> {
+        let conn = self.connection.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT id, content, content_type, timestamp, pinned 
+             FROM clipboard_history 
+             ORDER BY pinned DESC, timestamp DESC",
+        )?;
+
+        let item_iter = stmt.query_map([], |row| {
+            Ok(ClipboardItem {
+                id: row.get(0)?,
+                content: row.get(1)?,
+                content_type: row.get(2)?,
+                timestamp: row.get(3)?,
+                pinned: row.get(4)?,
+            })
+        })?;
+
+        let mut items = Vec::new();
+        for item in item_iter {
+            items.push(item?);
+        }
+
+        Ok(items)
+    }
+
+    pub fn delete_clipboard_item(&self, id: i64) -> Result<()> {
+        let conn = self.connection.lock().unwrap();
+        conn.execute("DELETE FROM clipboard_history WHERE id = ?1", [id])?;
+        Ok(())
+    }
+
+    pub fn toggle_pin(&self, id: i64) -> Result<()> {
+        let conn = self.connection.lock().unwrap();
+        conn.execute(
+            "UPDATE clipboard_history SET pinned = NOT pinned WHERE id = ?1",
+            [id],
+        )?;
+        Ok(())
+    }
+
+    pub fn get_config(&self) -> Result<AppConfig> {
+        let conn = self.connection.lock().unwrap();
+        let max_history_count: i32 = conn
+            .query_row(
+                "SELECT value FROM app_config WHERE key = 'max_history_count'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or(50);
+
+        let hotkey: String = conn
+            .query_row(
+                "SELECT value FROM app_config WHERE key = 'hotkey'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or_else(|_| "CommandOrControl+Alt+V".to_string());
+
+        Ok(AppConfig {
+            max_history_count,
+            hotkey,
+        })
+    }
+
+    pub fn update_config(&self, config: &AppConfig) -> Result<()> {
+        let conn = self.connection.lock().unwrap();
+        conn.execute(
+            "UPDATE app_config SET value = ?1 WHERE key = 'max_history_count'",
+            [config.max_history_count.to_string()],
+        )?;
+        conn.execute(
+            "UPDATE app_config SET value = ?1 WHERE key = 'hotkey'",
+            [&config.hotkey],
+        )?;
+        Ok(())
+    }
+}
