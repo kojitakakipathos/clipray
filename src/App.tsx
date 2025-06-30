@@ -72,6 +72,15 @@ function App() {
     }
   };
 
+  // アイテムをコピーして、ウィンドウを非表示にする
+  const copyAndHide = async (content: string, contentType: string = "text") => {
+    try {
+      await invoke("copy_and_hide", { content, contentType });
+    } catch (error) {
+      console.error("Failed to copy and hide:", error);
+    }
+  };
+
   // アイテムを削除
   const deleteItem = async (id: number) => {
     try {
@@ -172,7 +181,7 @@ function App() {
         event.preventDefault();
         if (filteredItems[selectedIndex]) {
           const item = filteredItems[selectedIndex];
-          copyToClipboard(item.content, item.content_type);
+          copyAndHide(item.content, item.content_type);
         }
       } else if (event.key === "Delete") {
         event.preventDefault();
@@ -217,7 +226,7 @@ function App() {
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="クリップボード履歴を検索... (↑↓で選択, Enterでコピー)"
+            placeholder="クリップボード履歴を検索... (↑↓で選択, Enterでコピー&閉じる)"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -308,7 +317,7 @@ function App() {
               }`}
               onClick={() => {
                 setSelectedIndex(index);
-                copyToClipboard(item.content, item.content_type);
+                copyAndHide(item.content, item.content_type);
               }}
             >
               <div className="item-icon">
@@ -371,7 +380,7 @@ function App() {
                     copyToClipboard(item.content, item.content_type);
                   }}
                   className="icon-button"
-                  title="コピー (Enter)"
+                  title="コピーのみ"
                 >
                   <Copy size={14} />
                 </button>
@@ -393,8 +402,8 @@ function App() {
 
       <div className="footer">
         <span className="footer-text">
-          {config.hotkey} で起動 | ↑↓で選択 | Enterでコピー | Escで閉じる |{" "}
-          {filteredItems.length} 件
+          {config.hotkey} で起動 | ↑↓で選択 | Enterでコピー&閉じる | Escで閉じる
+          | {filteredItems.length} 件
         </span>
       </div>
     </div>
