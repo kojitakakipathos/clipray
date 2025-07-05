@@ -1,12 +1,11 @@
 use tauri::{AppHandle, Manager, State, Window, Wry};
 use tauri_plugin_clipboard::Clipboard;
 
-use crate::clipboard::copy_to_clipboard_impl;
-use crate::config::update_hotkey;
-
-use crate::database::DatabaseManager;
-use crate::types::{AppConfig, ClipboardItem};
-use crate::window::{hide_window_impl, show_window_impl};
+use crate::libs::clipboard::copy_to_clipboard_impl;
+use crate::libs::config::update_hotkey;
+use crate::libs::database::DatabaseManager;
+use crate::libs::types::{AppConfig, ClipboardItem};
+use crate::libs::window::{hide_window_impl, show_window_impl};
 
 #[tauri::command]
 /// Get clipboard history

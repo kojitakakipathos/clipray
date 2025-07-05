@@ -3,8 +3,8 @@ use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, Wry};
 use tauri_plugin_clipboard::Clipboard;
 
-use crate::constants::CLIPBOARD_MONITOR_INTERVAL_MS;
-use crate::database::DatabaseManager;
+use crate::libs::constants::CLIPBOARD_MONITOR_INTERVAL_MS;
+use crate::libs::database::DatabaseManager;
 
 pub async fn monitor_clipboard(app_handle: AppHandle<Wry>) {
     let mut last_content = String::new();

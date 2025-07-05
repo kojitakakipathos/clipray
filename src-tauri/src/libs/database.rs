@@ -3,7 +3,7 @@ use rusqlite::{Connection, Result};
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-use crate::types::{AppConfig, ClipboardItem};
+use crate::libs::types::{AppConfig, ClipboardItem};
 
 // データベース接続を管理する構造体
 pub struct DatabaseManager {
