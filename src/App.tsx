@@ -174,25 +174,42 @@ function App() {
         setSelectedIndex((prev) =>
           Math.min(prev + 1, filteredItems.length - 1)
         );
-      } else if (event.key === "ArrowUp") {
+        return;
+      }
+      if (event.key === "ArrowUp") {
         event.preventDefault();
         setSelectedIndex((prev) => Math.max(prev - 1, 0));
-      } else if (event.key === "Enter") {
+        return;
+      }
+
+      if (event.key === "Enter") {
         event.preventDefault();
         if (filteredItems[selectedIndex]) {
           const item = filteredItems[selectedIndex];
           copyAndHide(item.content, item.content_type);
         }
-      } else if (event.key === "Delete") {
+        return;
+      }
+
+      if (event.key === "Delete") {
         event.preventDefault();
         if (filteredItems[selectedIndex]) {
           deleteItem(filteredItems[selectedIndex].id);
         }
-      } else if (event.ctrlKey && event.key === "p") {
+        return;
+      }
+
+      if (event.ctrlKey && event.key === "p") {
         event.preventDefault();
         if (filteredItems[selectedIndex]) {
           togglePin(filteredItems[selectedIndex].id);
         }
+        return;
+      }
+
+      if (event.ctrlKey && event.key === "i") {
+        event.preventDefault();
+        setShowSettings(!showSettings);
       }
     };
 
@@ -239,7 +256,7 @@ function App() {
           <button
             onClick={() => setShowSettings(!showSettings)}
             className="icon-button"
-            title="設定"
+            title="設定 (Ctrl+I)"
           >
             <Settings size={16} />
           </button>

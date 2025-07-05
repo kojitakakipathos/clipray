@@ -35,7 +35,7 @@ pub fn run() {
             app.manage(db);
 
             // Register hotkey (application continues even if this fails)
-            if let Err(e) = register_hotkey(&app_handle, &config.hotkey) {
+            if let Err(e) = register_hotkey(app_handle, &config.hotkey) {
                 eprintln!("Failed to register hotkey '{}': {}", config.hotkey, e);
                 eprintln!("The hotkey might already be in use by another application.");
                 eprintln!("You can change the hotkey in the settings.");
