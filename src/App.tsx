@@ -38,6 +38,8 @@ function App() {
     hotkey: "CommandOrControl+Shift+V",
   });
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const clipboardListRef = useRef<HTMLDivElement>(null);
+  const selectedItemRef = useRef<HTMLDivElement>(null);
 
   // クリップボード履歴を取得
   const loadClipboardHistory = async () => {
@@ -142,6 +144,12 @@ function App() {
     // ホットキーでの表示リスナー
     const unlistenShow = listen("show-clipboard", () => {
       loadClipboardHistory();
+
+      // scroll to top
+      if (clipboardListRef.current) {
+        clipboardListRef.current.scrollTop = 0;
+      }
+
       // 検索フィールドにフォーカス
       setTimeout(() => {
         searchInputRef.current?.focus();
@@ -223,6 +231,29 @@ function App() {
       setSelectedIndex(Math.max(0, filteredItems.length - 1));
     }
   }, [filteredItems.length, selectedIndex]);
+
+  // 選択されたアイテムを画面内に表示するための自動スクロール
+  useEffect(() => {
+    if (selectedItemRef.current && clipboardListRef.current) {
+      const selectedElement = selectedItemRef.current;
+      const containerElement = clipboardListRef.current;
+
+      // コンテナの相対位置を計算
+      const selectedTop = selectedElement.offsetTop;
+      const selectedBottom = selectedTop + selectedElement.offsetHeight;
+      const containerScrollTop = containerElement.scrollTop;
+      const containerHeight = containerElement.clientHeight;
+
+      // スクロールが必要かチェック
+      if (selectedTop < containerScrollTop) {
+        // 上にスクロール
+        containerElement.scrollTop = selectedTop - 8; // 8pxのマージン
+      } else if (selectedBottom > containerScrollTop + containerHeight) {
+        // 下にスクロール
+        containerElement.scrollTop = selectedBottom - containerHeight + 8; // 8pxのマージン
+      }
+    }
+  }, [selectedIndex, filteredItems]);
 
   // テキストを短縮表示
   const truncateText = (text: string, maxLength: number = 80) => {
@@ -315,7 +346,7 @@ function App() {
         </div>
       )}
 
-      <div className="clipboard-list">
+      <div className="clipboard-list" ref={clipboardListRef}>
         {filteredItems.length === 0 ? (
           <div className="empty-state">
             <p>クリップボード履歴がありません</p>
@@ -329,6 +360,7 @@ function App() {
           filteredItems.map((item, index) => (
             <div
               key={item.id}
+              ref={index === selectedIndex ? selectedItemRef : null}
               className={`clipboard-item ${item.pinned ? "pinned" : ""} ${
                 index === selectedIndex ? "selected" : ""
               }`}
