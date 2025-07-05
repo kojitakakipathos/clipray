@@ -11,6 +11,7 @@ interface UseKeyboardNavigationProps {
   togglePin: (id: number) => void;
   hideWindow: () => void;
   setShowSettings: (show: boolean) => void;
+  resetSearch: () => void;
 }
 
 export const useKeyboardNavigation = ({
@@ -23,6 +24,7 @@ export const useKeyboardNavigation = ({
   togglePin,
   hideWindow,
   setShowSettings,
+  resetSearch,
 }: UseKeyboardNavigationProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -54,6 +56,7 @@ export const useKeyboardNavigation = ({
         if (filteredItems[selectedIndex]) {
           const item = filteredItems[selectedIndex];
           copyAndHide(item.content, item.content_type);
+          resetSearch(); // 検索をリセット
         }
         return;
       }
@@ -91,5 +94,6 @@ export const useKeyboardNavigation = ({
     togglePin,
     hideWindow,
     setShowSettings,
+    resetSearch,
   ]);
 };

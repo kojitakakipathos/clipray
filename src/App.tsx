@@ -37,6 +37,11 @@ function App() {
     return item.content.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
+  const resetSearch = () => {
+    setSearchQuery("");
+    setSelectedIndex(0);
+  };
+
   // キーボードナビゲーション
   useKeyboardNavigation({
     showSettings,
@@ -48,13 +53,14 @@ function App() {
     togglePin,
     hideWindow,
     setShowSettings,
+    resetSearch,
   });
 
   // ホットキーでの表示リスナー
   useEffect(() => {
     const unlistenShow = listen("show-clipboard", () => {
       loadClipboardHistory();
-      setSelectedIndex(0);
+      resetSearch(); // 検索をリセット
 
       // scroll to top
       if (clipboardListRef.current) {
@@ -70,7 +76,7 @@ function App() {
     return () => {
       unlistenShow.then((fn) => fn());
     };
-  }, [loadClipboardHistory]);
+  }, [loadClipboardHistory, resetSearch]);
 
   // 選択インデックスを調整
   useEffect(() => {
@@ -111,6 +117,7 @@ function App() {
     setSelectedIndex(index);
     const item = filteredItems[index];
     copyAndHide(item.content, item.content_type);
+    resetSearch(); // 検索をリセット
   };
 
   const handleSettingsSave = async (newConfig: typeof config) => {
