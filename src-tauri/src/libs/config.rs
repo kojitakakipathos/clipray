@@ -16,11 +16,6 @@ pub fn register_hotkey(app_handle: &AppHandle<Wry>, hotkey: &str) -> Result<(), 
             let _ = window_clone.set_focus();
         })
         .map_err(|e| format!("Failed to set hotkey handler: {}", e))?;
-
-    shortcut_manager
-        .register(shortcut)
-        .map_err(|e| format!("Failed to register hotkey: {}", e))?;
-
     Ok(())
 }
 

@@ -3,7 +3,10 @@ use rusqlite::{Connection, Result};
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-use crate::libs::types::{AppConfig, ClipboardItem};
+use crate::libs::{
+    constants::DEFAULT_HOTKEY,
+    types::{AppConfig, ClipboardItem},
+};
 
 // データベース接続を管理する構造体
 pub struct DatabaseManager {
@@ -40,8 +43,8 @@ impl DatabaseManager {
             [],
         );
         let _ = conn.execute(
-            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('hotkey', 'CommandOrControl+Alt+V')",
-            [],
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('hotkey', ?1)",
+            [DEFAULT_HOTKEY],
         );
 
         Ok(DatabaseManager {
@@ -144,7 +147,7 @@ impl DatabaseManager {
                 [],
                 |row| row.get(0),
             )
-            .unwrap_or_else(|_| "CommandOrControl+Alt+V".to_string());
+            .unwrap_or_else(|_| DEFAULT_HOTKEY.to_string());
 
         Ok(AppConfig {
             max_history_count,
