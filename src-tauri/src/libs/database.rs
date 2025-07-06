@@ -221,4 +221,81 @@ impl DatabaseManager {
 
         Ok(ThemeConfig { preset })
     }
+
+    /// Create a test database in memory for testing purposes
+    #[cfg(any(test, feature = "test-utils"))]
+    pub fn new_test() -> Result<Self> {
+        let conn = Connection::open(":memory:")?;
+
+        // Create tables
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS clipboard_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,
+                content_type TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                pinned BOOLEAN DEFAULT FALSE
+            )",
+            [],
+        )?;
+
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS app_config (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )",
+            [],
+        )?;
+
+        // Insert default settings
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('max_history_count', '50')",
+            [],
+        );
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('hotkey', ?1)",
+            [DEFAULT_HOTKEY],
+        );
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('theme_preset', 'default')",
+            [],
+        );
+
+        Ok(DatabaseManager {
+            connection: Mutex::new(conn),
+        })
+    }
+
+    /// Setup test data for testing
+    #[cfg(any(test, feature = "test-utils"))]
+    pub fn setup_test_data(&self) -> Result<()> {
+        let conn = self.connection.lock().unwrap();
+
+        // Insert test data
+        conn.execute(
+            "INSERT INTO clipboard_history (content, content_type, timestamp, pinned) 
+             VALUES ('test content 1', 'text', '2024-01-01T00:00:00Z', FALSE)",
+            [],
+        )?;
+
+        conn.execute(
+            "INSERT INTO clipboard_history (content, content_type, timestamp, pinned) 
+             VALUES ('test content 2', 'text', '2024-01-02T00:00:00Z', TRUE)",
+            [],
+        )?;
+
+        conn.execute(
+            "INSERT INTO clipboard_history (content, content_type, timestamp, pinned) 
+             VALUES ('test image data', 'image', '2024-01-03T00:00:00Z', FALSE)",
+            [],
+        )?;
+
+        Ok(())
+    }
+
+    /// Get database connection for testing purposes
+    #[cfg(any(test, feature = "test-utils"))]
+    pub fn get_connection(&self) -> &Mutex<Connection> {
+        &self.connection
+    }
 }

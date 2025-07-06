@@ -5,3 +5,7 @@ pub mod constants;
 pub mod database;
 pub mod types;
 pub mod window;
+
+// Test modules
+#[cfg(test)]
+mod test;

@@ -16,17 +16,25 @@ tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-rusqlite = { version = "0.31", features = ["bundled"] }
+rusqlite = { version = "0.37", features = ["bundled"] }
 tokio = { version = "1", features = ["full"] }
 chrono = { version = "0.4", features = ["serde"] }
 base64 = "0.22"
-image = "0.24"
+image = "0.25.6"
 tauri-plugin-clipboard = "2"
 tauri-plugin-global-shortcut = "2"
 tauri-plugin-window-state = "2"
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3.8"
+serial_test = "3.0"
+rstest = "0.25"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
+# Feature for testing utilities
+test-utils = []
 
