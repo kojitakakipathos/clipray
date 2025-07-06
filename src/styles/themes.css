@@ -1,0 +1,248 @@
+/* ========================================
+   thme definition
+   ======================================== */
+
+/* ========================================
+   Purple Gradient theme
+   ======================================== */
+[data-theme="purple-gradient"] .header {
+  background: rgba(255, 255, 255, var(--background-alpha));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="purple-gradient"] .settings-panel {
+  background: rgba(255, 255, 255, var(--background-alpha));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="purple-gradient"] .icon-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="purple-gradient"] .icon-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="purple-gradient"] .search-input {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="purple-gradient"] .search-input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+}
+
+[data-theme="purple-gradient"] .clipboard-item {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="purple-gradient"] .clipboard-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="purple-gradient"] .clipboard-item.selected {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="purple-gradient"] .theme-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="purple-gradient"] .theme-card:hover {
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  transform: translateY(-2px);
+}
+
+[data-theme="purple-gradient"] .theme-card.selected {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
+}
+
+[data-theme="purple-gradient"] .cancel-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+[data-theme="purple-gradient"] .cancel-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="purple-gradient"] .modal-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="purple-gradient"] .modal-header h3 {
+  color: white;
+}
+
+[data-theme="purple-gradient"] .warning-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="purple-gradient"] .warning-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+}
+
+[data-theme="purple-gradient"] .warning-item span:last-child {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="purple-gradient"] .text-item .item-text {
+  color: white;
+}
+
+[data-theme="purple-gradient"] .item-meta {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="purple-gradient"] .image-meta span {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="purple-gradient"] .item-icon {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="purple-gradient"] .empty-state {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="purple-gradient"] .empty-state p {
+  color: white;
+}
+
+[data-theme="purple-gradient"] .empty-hint {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="purple-gradient"] .footer-text {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ========================================
+   Deep Purple theme
+   ======================================== */
+[data-theme="deep-purple"] .header,
+[data-theme="deep-purple"] .settings-panel {
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="deep-purple"] .search-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="deep-purple"] .search-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.3);
+}
+
+[data-theme="deep-purple"] .icon-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="deep-purple"] .icon-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="deep-purple"] .clipboard-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="deep-purple"] .clipboard-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="deep-purple"] .clipboard-item.selected {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-color);
+}
+
+[data-theme="deep-purple"] .theme-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="deep-purple"] .theme-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="deep-purple"] .theme-card.selected {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ========================================
+   Midnight Blue theme
+   ======================================== */
+[data-theme="midnight-blue"] .header,
+[data-theme="midnight-blue"] .settings-panel {
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="midnight-blue"] .search-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="midnight-blue"] .search-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.3);
+}
+
+[data-theme="midnight-blue"] .icon-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="midnight-blue"] .icon-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="midnight-blue"] .clipboard-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="midnight-blue"] .clipboard-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="midnight-blue"] .clipboard-item.selected {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-color);
+}
+
+[data-theme="midnight-blue"] .theme-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="midnight-blue"] .theme-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="midnight-blue"] .theme-card.selected {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.12);
+}

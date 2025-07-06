@@ -1,3 +1,21 @@
+/* テーマファイルをインポート */
+@import "./styles/themes.css";
+
+/* CSS Variables for Theme System */
+:root {
+  /* Default Theme (Light) - 初期値として設定 */
+  --primary-color: #ffffff;
+  --secondary-color: #f8f9fa;
+  --background-color: #ffffff;
+  --text-color: #2c3e50;
+  --text-secondary: rgba(44, 62, 80, 0.7);
+  --background-alpha: 0.95;
+  --border-color: rgba(44, 62, 80, 0.15);
+  --accent-color: #007bff;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -18,8 +36,12 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 100%
+  );
+  color: var(--text-color);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
     sans-serif;
   font-size: 14px;
@@ -31,10 +53,125 @@ body {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, var(--background-alpha));
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-color);
   gap: 12px;
+}
+
+/* デフォルトテーマ（Light）の場合のスタイル調整 */
+body:not([data-theme]) .header {
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .settings-panel {
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .icon-button {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .icon-button:hover {
+  background: rgba(44, 62, 80, 0.1);
+}
+
+body:not([data-theme]) .icon-button.pinned {
+  background: #64b5f6;
+  color: white;
+}
+
+body:not([data-theme]) .icon-button.pinned:hover {
+  background: #42a5f5;
+}
+
+body:not([data-theme]) .icon-button.delete:hover {
+  background: #dc3545;
+  color: white;
+}
+
+body:not([data-theme]) .search-input {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .search-input:focus {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+body:not([data-theme]) .setting-item input {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .setting-item input:focus {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+body:not([data-theme]) .clipboard-item {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(44, 62, 80, 0.1);
+}
+
+body:not([data-theme]) .clipboard-item:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+body:not([data-theme]) .clipboard-item.selected {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #64b5f6;
+}
+
+body:not([data-theme]) .clipboard-item.pinned {
+  background: rgba(100, 181, 246, 0.08);
+  border-color: rgba(100, 181, 246, 0.2);
+}
+
+body:not([data-theme]) .clipboard-item.pinned.selected {
+  background: rgba(100, 181, 246, 0.12);
+  border-color: #64b5f6;
+}
+
+body:not([data-theme]) .footer {
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .text-item .item-text {
+  color: var(--text-color);
+}
+
+body:not([data-theme]) .item-meta {
+  color: var(--text-secondary);
+}
+
+body:not([data-theme]) .image-meta span {
+  color: var(--text-color);
+}
+
+body:not([data-theme]) .item-icon {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .empty-state {
+  color: var(--text-secondary);
+}
+
+body:not([data-theme]) .empty-state p {
+  color: var(--text-color);
+}
+
+body:not([data-theme]) .empty-hint {
+  color: var(--text-secondary) !important;
 }
 
 .search-container {
@@ -47,7 +184,7 @@ body {
 .search-icon {
   position: absolute;
   left: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   z-index: 1;
 }
 
@@ -56,20 +193,20 @@ body {
   padding: 8px 12px 8px 36px;
   border: none;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  color: var(--text-color);
   font-size: 14px;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
 .search-input:focus {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
@@ -84,16 +221,21 @@ body {
   justify-content: center;
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   border: none;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  color: var(--text-color);
   cursor: pointer;
   transition: all 0.2s ease;
+  font-size: 14px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .icon-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
   transform: translateY(-1px);
 }
 
@@ -102,22 +244,32 @@ body {
 }
 
 .icon-button.pinned {
-  background: #ffd700;
-  color: #333;
+  background: var(--accent-color);
+  color: white;
 }
 
 .icon-button.delete:hover {
-  background: #ff4757;
+  background: var(--danger-color);
   color: white;
+}
+
+.icon-button.exit-app-button {
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  color: var(--text-color);
+}
+
+.icon-button.exit-app-button:hover {
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
+  color: var(--text-color);
 }
 
 /* 設定パネル */
 .settings-panel {
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  background: rgba(255, 255, 255, var(--background-alpha));
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  animation: slideDown 0.2s ease;
+  border-bottom: 1px solid var(--border-color);
+  animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
@@ -132,7 +284,8 @@ body {
 }
 
 .settings-panel h3 {
-  margin: 0 0 16px 0;
+  margin-bottom: 16px;
+  color: var(--text-color);
   font-size: 16px;
   font-weight: 600;
 }
@@ -140,42 +293,142 @@ body {
 .setting-item {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
 .setting-item label {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-color);
 }
 
 .setting-item input {
   padding: 8px 12px;
-  border: none;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  color: var(--text-color);
   font-size: 14px;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .setting-item input:focus {
-  background: rgba(255, 255, 255, 0.25);
+  border-color: var(--accent-color);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 .setting-item small {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  color: var(--text-secondary);
   margin-top: 4px;
+}
+
+/* テーマセクション */
+.theme-section {
+  margin-bottom: 16px;
+}
+
+.theme-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.theme-section-header:hover {
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
+}
+
+.theme-section-header h4 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.current-theme {
+  color: var(--text-secondary);
+  font-size: 12px;
+  flex: 1;
+}
+
+.expand-icon {
+  color: var(--text-secondary);
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.theme-section h4 {
+  margin-bottom: 12px;
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.theme-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.theme-card:hover {
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
+  transform: translateY(-2px);
+}
+
+.theme-card.selected {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.15));
+}
+
+.theme-preview {
+  width: 40px;
+  height: 24px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  border: 1px solid var(--border-color);
+}
+
+.theme-card span {
+  font-size: 12px;
+  color: var(--text-color);
+  font-weight: 500;
 }
 
 .setting-actions {
   display: flex;
   gap: 8px;
-  margin-top: 20px;
+  justify-content: flex-end;
 }
 
 .save-button,
@@ -191,57 +444,60 @@ body {
 }
 
 .save-button {
-  background: #2ed573;
+  background: var(--accent-color);
   color: white;
 }
 
 .save-button:hover {
-  background: #26d165;
+  background: var(--accent-color);
+  filter: brightness(1.1);
   transform: translateY(-1px);
 }
 
 .cancel-button {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
 }
 
 .cancel-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.15));
 }
 
 .exit-button {
-  background: #ff4757;
+  background: var(--danger-color);
   color: white;
 }
 
 .exit-button:hover {
-  background: #ff3742;
+  background: var(--danger-color);
+  filter: brightness(1.1);
   transform: translateY(-1px);
 }
 
-/* Exit Confirm Modal */
+/* Modal styles - 特定のモーダル内でのボタンスタイル */
+
+/* Exit確認モーダル */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease;
 }
 
 .modal-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--background-color);
   border-radius: 12px;
   padding: 24px;
-  min-width: 400px;
-  max-width: 500px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideIn 0.3s ease;
+  max-width: 400px;
+  width: 90%;
+  animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
@@ -260,10 +516,10 @@ body {
 }
 
 .modal-header h3 {
-  margin: 0;
+  color: var(--text-color);
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  margin-bottom: 8px;
 }
 
 .modal-body {
@@ -271,41 +527,41 @@ body {
 }
 
 .warning-text {
+  color: var(--text-secondary);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
   margin-bottom: 16px;
-  font-weight: 500;
 }
 
 .warning-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .warning-item {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  font-size: 13px;
-  line-height: 1.4;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
 }
 
 .warning-icon {
-  flex-shrink: 0;
-  font-size: 14px;
+  color: var(--danger-color);
+  font-size: 16px;
 }
 
 .warning-item span:last-child {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-color);
+  font-size: 13px;
 }
 
 .modal-actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: flex-end;
 }
 
@@ -313,14 +569,46 @@ body {
 .modal-actions .exit-button {
   padding: 10px 20px;
   font-size: 14px;
+  border-radius: 6px;
+}
+
+/* デフォルトテーマ（Light）のモーダルスタイル */
+body:not([data-theme]) .modal-content {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+body:not([data-theme]) .modal-header h3 {
+  color: var(--text-color);
+}
+
+body:not([data-theme]) .warning-text {
+  color: var(--text-secondary);
+}
+
+body:not([data-theme]) .warning-item {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .warning-item span:last-child {
+  color: var(--text-color);
 }
 
 /* クリップボードリスト */
 .clipboard-list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.clipboard-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 .clipboard-list::-webkit-scrollbar {
@@ -328,8 +616,7 @@ body {
 }
 
 .clipboard-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  background: transparent;
 }
 
 .clipboard-list::-webkit-scrollbar-thumb {
@@ -341,19 +628,32 @@ body {
   background: rgba(255, 255, 255, 0.5);
 }
 
+.clipboard-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.clipboard-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.clipboard-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 /* クリップボードアイテム */
 .clipboard-item {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
   padding: 12px;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.05));
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 2px solid transparent;
-  animation: fadeIn 0.3s ease;
+  gap: 12px;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
@@ -368,43 +668,37 @@ body {
 }
 
 .clipboard-item:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .clipboard-item.selected {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.15));
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 .clipboard-item.pinned {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 215, 0, 0.2),
-    rgba(255, 193, 7, 0.2)
-  );
-  border-left: 4px solid #ffd700;
+  border-left: 4px solid var(--accent-color);
 }
 
 .clipboard-item.pinned.selected {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 215, 0, 0.3),
-    rgba(255, 193, 7, 0.3)
-  );
+  border-left: 4px solid var(--accent-color);
+  border-color: var(--accent-color);
 }
 
+/* アイテムアイコン */
 .item-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, calc(var(--background-alpha) + 0.1));
+  color: var(--text-color);
+  font-size: 14px;
   flex-shrink: 0;
 }
 
@@ -415,43 +709,47 @@ body {
 
 .text-item .item-text {
   font-size: 14px;
+  color: var(--text-color);
   line-height: 1.4;
-  color: white;
   word-break: break-word;
-  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .item-meta {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
 }
 
 /* 画像アイテム */
 .image-item {
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
 }
 
 .image-preview {
   width: 48px;
   height: 48px;
-  object-fit: cover;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.1);
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .image-meta {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .image-meta span {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 /* アイテムアクション */
@@ -468,47 +766,48 @@ body {
 }
 
 .item-actions .icon-button {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
 }
 
-/* 空の状態 */
+/* 空状態 */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: 100%;
+  color: var(--text-secondary);
   text-align: center;
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .empty-state p {
-  margin: 0;
   font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--text-color);
 }
 
 .empty-hint {
-  font-size: 13px !important;
-  margin-top: 8px !important;
-  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 14px;
+  color: var(--text-secondary) !important;
+  opacity: 0.8;
 }
 
 /* フッター */
 .footer {
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
+  background: rgba(255, 255, 255, var(--background-alpha));
+  border-top: 1px solid var(--border-color);
 }
 
 .footer-text {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
-/* レスポンシブ対応 */
+/* レスポンシブデザイン */
 @media (max-width: 500px) {
   .header {
     padding: 8px 12px;
@@ -516,12 +815,10 @@ body {
 
   .search-input {
     font-size: 13px;
-    padding: 6px 10px 6px 32px;
   }
 
   .clipboard-item {
     padding: 10px;
-    gap: 8px;
   }
 
   .item-icon {
@@ -535,24 +832,24 @@ body {
   }
 }
 
-/* アニメーション改善 */
+/* アクティブ状態のフィードバック */
 .clipboard-item:active {
-  transform: scale(0.98);
+  transform: translateY(0);
 }
 
 .icon-button:active {
-  transform: scale(0.95);
+  transform: translateY(0);
 }
 
 /* フォーカス状態の改善 */
 .search-input:focus,
 .setting-item input:focus {
-  animation: focusGlow 0.3s ease;
+  outline: none;
 }
 
 @keyframes focusGlow {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
   }
   50% {
     box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
@@ -560,4 +857,28 @@ body {
   100% {
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
   }
+}
+
+body:not([data-theme]) .icon-button.delete:hover {
+  background: #dc3545;
+  color: white;
+}
+
+body:not([data-theme]) .icon-button.exit-app-button {
+  background: rgba(44, 62, 80, 0.05);
+  color: var(--text-color);
+}
+
+body:not([data-theme]) .icon-button.exit-app-button:hover {
+  background: rgba(44, 62, 80, 0.1);
+  color: var(--text-color);
+}
+
+body:not([data-theme]) .theme-section-header {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body:not([data-theme]) .theme-section-header:hover {
+  background: rgba(0, 0, 0, 0.05);
 }

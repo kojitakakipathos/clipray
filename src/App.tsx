@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { useClipboard } from "./hooks/useClipboard";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
+import { useTheme } from "./hooks/useTheme";
 import Header from "./components/Header";
 import Settings from "./components/Settings";
 import ExitConfirmModal from "./components/ExitConfirmModal";
@@ -34,6 +35,9 @@ function App() {
     hideWindow,
     exitApp,
   } = useClipboard();
+
+  // Apply theme
+  useTheme(config.theme);
 
   // Search filter
   const filteredItems = clipboardItems.filter((item) => {

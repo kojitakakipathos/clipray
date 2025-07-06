@@ -8,6 +8,9 @@ export const useClipboard = () => {
   const [config, setConfig] = useState<AppConfig>({
     max_history_count: 50,
     hotkey: "CommandOrControl+Shift+V",
+    theme: {
+      preset: "default",
+    },
   });
 
   // Get clipboard history

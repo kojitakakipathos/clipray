@@ -1,5 +1,11 @@
-import React from "react";
-import { AppConfig } from "../types";
+import React, { useState } from "react";
+import {
+  AppConfig,
+  ThemeConfig,
+  THEME_ORDER,
+  THEME_DISPLAY_NAMES,
+  THEME_PREVIEW_COLORS,
+} from "../types";
 
 interface SettingsProps {
   config: AppConfig;
@@ -16,9 +22,65 @@ const Settings: React.FC<SettingsProps> = ({
   onCancel,
   onExit,
 }) => {
+  const [isThemeExpanded, setIsThemeExpanded] = useState(false);
+
+  const handleThemeChange = (preset: ThemeConfig["preset"]) => {
+    onConfigChange({
+      ...config,
+      theme: {
+        ...config.theme,
+        preset,
+      },
+    });
+  };
+
+  const getPreviewStyle = (preset: ThemeConfig["preset"]) => {
+    const colors = THEME_PREVIEW_COLORS[preset];
+
+    return {
+      background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+      border: preset === "default" ? "1px solid #e0e0e0" : "none",
+    };
+  };
+
   return (
     <div className="settings-panel">
       <h3>Settings</h3>
+
+      <div className="theme-section">
+        <h4>Theme</h4>
+        <div
+          className="theme-section-header"
+          onClick={() => setIsThemeExpanded(!isThemeExpanded)}
+        >
+          <span className="current-theme">
+            {THEME_DISPLAY_NAMES[config.theme.preset]}
+          </span>
+          <span className={`expand-icon ${isThemeExpanded ? "expanded" : ""}`}>
+            ▼
+          </span>
+        </div>
+        {isThemeExpanded && (
+          <div className="theme-presets">
+            {THEME_ORDER.map((preset) => (
+              <div
+                key={preset}
+                className={`theme-card ${
+                  config.theme.preset === preset ? "selected" : ""
+                }`}
+                onClick={() => handleThemeChange(preset)}
+              >
+                <div
+                  className="theme-preview"
+                  style={getPreviewStyle(preset)}
+                />
+                <span>{THEME_DISPLAY_NAMES[preset]}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="setting-item">
         <label>History Limit</label>
         <input
