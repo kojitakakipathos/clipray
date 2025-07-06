@@ -161,7 +161,9 @@ function App() {
         listRef={clipboardListRef}
       />
 
-      <Footer hotkey={config.hotkey} itemCount={filteredItems.length} />
+      {filteredItems.length > 0 && (
+        <Footer hotkey={config.hotkey} itemCount={filteredItems.length} />
+      )}
     </div>
   );
 }
