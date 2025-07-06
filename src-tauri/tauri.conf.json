@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Clipray - クリップボード管理",
+        "title": "Clipray - Clipboard Manager",
         "width": 400,
         "height": 500,
         "resizable": true,
