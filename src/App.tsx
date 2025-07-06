@@ -29,10 +29,10 @@ function App() {
     hideWindow,
   } = useClipboard();
 
-  // 検索フィルタ
+  // Search filter
   const filteredItems = clipboardItems.filter((item) => {
     if (item.content_type === "image") {
-      return true; // 画像は常に表示
+      return true; // Always show images
     }
     return item.content.toLowerCase().includes(searchQuery.toLowerCase());
   });
@@ -42,7 +42,7 @@ function App() {
     setSelectedIndex(0);
   };
 
-  // キーボードナビゲーション
+  // Keyboard navigation
   useKeyboardNavigation({
     showSettings,
     selectedIndex,
@@ -56,18 +56,18 @@ function App() {
     resetSearch,
   });
 
-  // ホットキーでの表示リスナー
+  // Hotkey display listener
   useEffect(() => {
     const unlistenShow = listen("show-clipboard", () => {
       loadClipboardHistory();
-      resetSearch(); // 検索をリセット
+      resetSearch(); // Reset search
 
       // scroll to top
       if (clipboardListRef.current) {
         clipboardListRef.current.scrollTop = 0;
       }
 
-      // 検索フィールドにフォーカス
+      // Focus on search field
       setTimeout(() => {
         searchInputRef.current?.focus();
       }, 100);
@@ -78,32 +78,32 @@ function App() {
     };
   }, [loadClipboardHistory, resetSearch]);
 
-  // 選択インデックスを調整
+  // Adjust selected index
   useEffect(() => {
     if (selectedIndex >= filteredItems.length) {
       setSelectedIndex(Math.max(0, filteredItems.length - 1));
     }
   }, [filteredItems.length, selectedIndex]);
 
-  // 選択されたアイテムを画面内に表示するための自動スクロール
+  // Auto-scroll to display selected item within the screen
   useEffect(() => {
     if (selectedItemRef.current && clipboardListRef.current) {
       const selectedElement = selectedItemRef.current;
       const containerElement = clipboardListRef.current;
 
-      // コンテナの相対位置を計算
+      // Calculate container's relative position
       const selectedTop = selectedElement.offsetTop;
       const selectedBottom = selectedTop + selectedElement.offsetHeight;
       const containerScrollTop = containerElement.scrollTop;
       const containerHeight = containerElement.clientHeight;
 
-      // スクロールが必要かチェック
+      // Check if scrolling is needed
       if (selectedTop < containerScrollTop) {
-        // 上にスクロール
-        containerElement.scrollTop = selectedTop - 8; // 8pxのマージン
+        // Scroll up
+        containerElement.scrollTop = selectedTop - 8; // 8px margin
       } else if (selectedBottom > containerScrollTop + containerHeight) {
-        // 下にスクロール
-        containerElement.scrollTop = selectedBottom - containerHeight + 8; // 8pxのマージン
+        // Scroll down
+        containerElement.scrollTop = selectedBottom - containerHeight + 8; // 8px margin
       }
     }
   }, [selectedIndex, filteredItems]);
@@ -117,7 +117,7 @@ function App() {
     setSelectedIndex(index);
     const item = filteredItems[index];
     copyAndHide(item.content, item.content_type);
-    resetSearch(); // 検索をリセット
+    resetSearch(); // Reset search
   };
 
   const handleSettingsSave = async (newConfig: typeof config) => {
@@ -127,8 +127,8 @@ function App() {
 
   const handleSettingsCancel = () => {
     setShowSettings(false);
-    // 設定をリセット（元の設定を再読み込み）
-    // loadConfig(); // useClipboardフックで管理されているため、ここでは不要
+    // Reset settings (reload original settings)
+    // loadConfig(); // Not needed here as it's managed by useClipboard hook
   };
 
   return (

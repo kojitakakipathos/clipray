@@ -37,7 +37,7 @@ export const useKeyboardNavigation = ({
         return;
       }
 
-      // 設定画面では無効
+      // Disabled in settings screen
       if (showSettings) return;
 
       if (event.key === "ArrowDown") {
@@ -56,7 +56,7 @@ export const useKeyboardNavigation = ({
         if (filteredItems[selectedIndex]) {
           const item = filteredItems[selectedIndex];
           copyAndHide(item.content, item.content_type);
-          resetSearch(); // 検索をリセット
+          resetSearch(); // Reset search
         }
         return;
       }

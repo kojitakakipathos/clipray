@@ -10,7 +10,7 @@ export const useClipboard = () => {
     hotkey: "CommandOrControl+Shift+V",
   });
 
-  // クリップボード履歴を取得
+  // Get clipboard history
   const loadClipboardHistory = async () => {
     try {
       const items = await invoke<ClipboardItem[]>("get_clipboard_history");
@@ -20,7 +20,7 @@ export const useClipboard = () => {
     }
   };
 
-  // 設定を取得
+  // Get configuration
   const loadConfig = async () => {
     try {
       const appConfig = await invoke<AppConfig>("get_config");
@@ -42,7 +42,7 @@ export const useClipboard = () => {
     }
   };
 
-  // アイテムをコピーして、ウィンドウを非表示にする
+  // Copy item and hide window
   const copyAndHide = async (content: string, contentType: string = "text") => {
     try {
       await invoke("copy_and_hide", { content, contentType });
@@ -51,7 +51,7 @@ export const useClipboard = () => {
     }
   };
 
-  // アイテムを削除
+  // Delete item
   const deleteItem = async (id: number) => {
     try {
       await invoke("delete_clipboard_item", { id });
@@ -61,7 +61,7 @@ export const useClipboard = () => {
     }
   };
 
-  // ピン留めをトグル
+  // Toggle pin
   const togglePin = async (id: number) => {
     try {
       await invoke("toggle_pin", { id });
@@ -71,7 +71,7 @@ export const useClipboard = () => {
     }
   };
 
-  // 設定を保存
+  // Save configuration
   const saveConfig = async (newConfig: AppConfig) => {
     try {
       await invoke("update_config", { config: newConfig });
@@ -81,7 +81,7 @@ export const useClipboard = () => {
     }
   };
 
-  // ウィンドウを非表示
+  // Hide window
   const hideWindow = async () => {
     try {
       await invoke("hide_window");
@@ -90,12 +90,12 @@ export const useClipboard = () => {
     }
   };
 
-  // 初期化
+  // Initialize
   useEffect(() => {
     loadClipboardHistory();
     loadConfig();
 
-    // クリップボード更新のリスナー
+    // Clipboard update listener
     const unlistenClipboard = listen("clipboard-updated", () => {
       loadClipboardHistory();
     });

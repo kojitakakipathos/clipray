@@ -34,10 +34,10 @@ pub fn update_hotkey(
     old_hotkey: &str,
     new_hotkey: &str,
 ) -> Result<(), String> {
-    // 古いホットキーを削除
+    // Remove old hotkey
     let _ = unregister_hotkey(app_handle, old_hotkey);
 
-    // 新しいホットキーを登録
+    // Register new hotkey
     register_hotkey(app_handle, new_hotkey)?;
 
     Ok(())

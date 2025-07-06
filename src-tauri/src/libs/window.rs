@@ -1,7 +1,7 @@
 use tauri::{PhysicalPosition, PhysicalSize, Window, Wry};
 
 pub fn show_window_impl(window: &Window<Wry>) -> Result<(), String> {
-    // ウィンドウを画面中央に配置
+    // Center the window on the screen
     let monitor = window.current_monitor().map_err(|e| e.to_string())?;
     if let Some(monitor) = monitor {
         let screen_size = monitor.size();

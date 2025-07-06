@@ -8,7 +8,7 @@ use crate::libs::{
     types::{AppConfig, ClipboardItem},
 };
 
-// データベース接続を管理する構造体
+// Structure to manage database connections
 pub struct DatabaseManager {
     connection: Mutex<Connection>,
 }
@@ -17,7 +17,7 @@ impl DatabaseManager {
     pub fn new(db_path: PathBuf) -> Result<Self> {
         let conn = Connection::open(db_path)?;
 
-        // テーブル作成
+        // Create tables
         conn.execute(
             "CREATE TABLE IF NOT EXISTS clipboard_history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,7 +37,7 @@ impl DatabaseManager {
             [],
         )?;
 
-        // デフォルト設定を挿入
+        // Insert default settings
         let _ = conn.execute(
             "INSERT OR IGNORE INTO app_config (key, value) VALUES ('max_history_count', '50')",
             [],
@@ -53,19 +53,19 @@ impl DatabaseManager {
     }
 
     pub fn add_clipboard_item(&self, content: &str, content_type: &str) -> Result<()> {
-        // 履歴数制限を適用（ピン留めされていないもののみ）
+        // Apply history count limit (only for non-pinned items)
         let max_count: u32 = self.get_max_history_count()?;
 
         let conn = self.connection.lock().unwrap();
         let timestamp = Utc::now().to_rfc3339();
 
-        // 同じ内容が既にある場合は削除（重複を避ける）
+        // Delete if the same content already exists (to avoid duplicates)
         conn.execute(
             "DELETE FROM clipboard_history WHERE content = ?1 AND content_type = ?2",
             [content, content_type],
         )?;
 
-        // 新しいアイテムを追加
+        // Add new item
         conn.execute(
             "INSERT INTO clipboard_history (content, content_type, timestamp, pinned) VALUES (?1, ?2, ?3, FALSE)",
             [content, content_type, &timestamp],
