@@ -12,6 +12,7 @@ interface UseKeyboardNavigationProps {
   hideWindow: () => void;
   setShowSettings: (show: boolean) => void;
   resetSearch: () => void;
+  setShowExitModal: (show: boolean) => void;
 }
 
 export const useKeyboardNavigation = ({
@@ -25,10 +26,12 @@ export const useKeyboardNavigation = ({
   hideWindow,
   setShowSettings,
   resetSearch,
+  setShowExitModal,
 }: UseKeyboardNavigationProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        setShowExitModal(false);
         if (showSettings) {
           setShowSettings(false);
         } else {

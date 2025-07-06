@@ -179,7 +179,8 @@ body {
 }
 
 .save-button,
-.cancel-button {
+.cancel-button,
+.exit-button {
   padding: 8px 16px;
   border: none;
   border-radius: 6px;
@@ -206,6 +207,112 @@ body {
 
 .cancel-button:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.exit-button {
+  background: #ff4757;
+  color: white;
+}
+
+.exit-button:hover {
+  background: #ff3742;
+  transform: translateY(-1px);
+}
+
+/* Exit Confirm Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 400px;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.modal-body {
+  margin-bottom: 24px;
+}
+
+.warning-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.warning-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.warning-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.warning-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.warning-item span:last-child {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-actions .cancel-button,
+.modal-actions .exit-button {
+  padding: 10px 20px;
+  font-size: 14px;
 }
 
 /* クリップボードリスト */

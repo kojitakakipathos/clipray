@@ -90,6 +90,15 @@ export const useClipboard = () => {
     }
   };
 
+  // Exit application
+  const exitApp = async () => {
+    try {
+      await invoke("exit_app");
+    } catch (error) {
+      console.error("Failed to exit app:", error);
+    }
+  };
+
   // Initialize
   useEffect(() => {
     loadClipboardHistory();
@@ -116,5 +125,6 @@ export const useClipboard = () => {
     togglePin,
     saveConfig,
     hideWindow,
+    exitApp,
   };
 };

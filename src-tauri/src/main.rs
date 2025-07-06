@@ -63,6 +63,7 @@ pub fn run() {
             update_config,
             show_window,
             hide_window,
+            exit_app,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

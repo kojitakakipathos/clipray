@@ -4,6 +4,7 @@ import { useClipboard } from "./hooks/useClipboard";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
 import Header from "./components/Header";
 import Settings from "./components/Settings";
+import ExitConfirmModal from "./components/ExitConfirmModal";
 import ClipboardList from "./components/ClipboardList";
 import Footer from "./components/Footer";
 import "./App.css";
@@ -11,7 +12,11 @@ import "./App.css";
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSettings, setShowSettings] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [originalConfig, setOriginalConfig] = useState<typeof config | null>(
+    null
+  );
   const searchInputRef = useRef<HTMLInputElement>(null);
   const clipboardListRef = useRef<HTMLDivElement>(null);
   const selectedItemRef = useRef<HTMLDivElement>(null);
@@ -27,6 +32,7 @@ function App() {
     togglePin,
     saveConfig,
     hideWindow,
+    exitApp,
   } = useClipboard();
 
   // Search filter
@@ -54,6 +60,7 @@ function App() {
     hideWindow,
     setShowSettings,
     resetSearch,
+    setShowExitModal,
   });
 
   // Hotkey display listener
@@ -128,21 +135,45 @@ function App() {
 
   const handleSettingsSave = async (newConfig: typeof config) => {
     await saveConfig(newConfig);
+    setOriginalConfig(null);
     setShowSettings(false);
   };
 
   const handleSettingsCancel = () => {
+    setConfig(originalConfig || config);
+    setOriginalConfig(null);
     setShowSettings(false);
-    // Reset settings (reload original settings)
-    // loadConfig(); // Not needed here as it's managed by useClipboard hook
   };
+
+  const handleSettingsToggle = () => {
+    if (!showSettings) {
+      setOriginalConfig(config);
+    }
+    setShowSettings(!showSettings);
+  };
+
+  const handleExitRequest = () => {
+    setShowExitModal(true);
+  };
+
+  const handleExitConfirm = () => {
+    setShowExitModal(false);
+    exitApp();
+  };
+
+  const handleExitCancel = () => {
+    setShowExitModal(false);
+  };
+
+  // Count pinned items
+  const pinnedItemsCount = clipboardItems.filter((item) => item.pinned).length;
 
   return (
     <div className="app">
       <Header
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
-        onSettingsToggle={() => setShowSettings(!showSettings)}
+        onSettingsToggle={handleSettingsToggle}
         onHide={hideWindow}
         searchInputRef={searchInputRef}
       />
@@ -153,8 +184,16 @@ function App() {
           onConfigChange={setConfig}
           onSave={handleSettingsSave}
           onCancel={handleSettingsCancel}
+          onExit={handleExitRequest}
         />
       )}
+
+      <ExitConfirmModal
+        isOpen={showExitModal}
+        onConfirm={handleExitConfirm}
+        onCancel={handleExitCancel}
+        pinnedItemsCount={pinnedItemsCount}
+      />
 
       <ClipboardList
         items={filteredItems}

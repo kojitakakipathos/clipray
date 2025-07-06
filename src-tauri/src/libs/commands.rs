@@ -91,3 +91,10 @@ pub async fn show_window(window: Window<Wry>) -> Result<(), String> {
 pub async fn hide_window(window: Window<Wry>) -> Result<(), String> {
     hide_window_impl(&window)
 }
+
+// Exit application
+#[tauri::command]
+pub async fn exit_app(app_handle: AppHandle<Wry>) -> Result<(), String> {
+    app_handle.exit(0);
+    Ok(())
+}

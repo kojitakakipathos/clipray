@@ -6,6 +6,7 @@ interface SettingsProps {
   onConfigChange: (config: AppConfig) => void;
   onSave: (config: AppConfig) => void;
   onCancel: () => void;
+  onExit: () => void;
 }
 
 const Settings: React.FC<SettingsProps> = ({
@@ -13,6 +14,7 @@ const Settings: React.FC<SettingsProps> = ({
   onConfigChange,
   onSave,
   onCancel,
+  onExit,
 }) => {
   return (
     <div className="settings-panel">
@@ -50,6 +52,9 @@ const Settings: React.FC<SettingsProps> = ({
         </button>
         <button onClick={onCancel} className="cancel-button">
           Cancel
+        </button>
+        <button onClick={onExit} className="exit-button">
+          Exit App
         </button>
       </div>
     </div>
