@@ -91,6 +91,12 @@ function App() {
       const selectedElement = selectedItemRef.current;
       const containerElement = clipboardListRef.current;
 
+      // Scroll to top when selected index is 0
+      if (selectedIndex === 0) {
+        containerElement.scrollTop = 0;
+        return;
+      }
+
       // Calculate container's relative position
       const selectedTop = selectedElement.offsetTop;
       const selectedBottom = selectedTop + selectedElement.offsetHeight;
