@@ -3,11 +3,11 @@ import React from "react";
 const EmptyState: React.FC = () => {
   return (
     <div className="empty-state">
-      <p>クリップボード履歴がありません</p>
+      <p>No clipboard history</p>
       <p className="empty-hint">
-        何かをコピーすると、ここに表示されます
+        Copy something and it will appear here
         <br />
-        テキストや画像に対応しています
+        Supports text and images
       </p>
     </div>
   );

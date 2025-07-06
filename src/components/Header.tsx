@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({
         <input
           ref={searchInputRef}
           type="text"
-          placeholder="クリップボード履歴を検索... (↑↓で選択, Enterでコピー&閉じる)"
+          placeholder="Search clipboard history..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="search-input"
@@ -33,11 +33,11 @@ const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onSettingsToggle}
           className="icon-button"
-          title="設定 (Ctrl+I)"
+          title="Settings (Ctrl+I)"
         >
           <Settings size={16} />
         </button>
-        <button onClick={onHide} className="icon-button" title="閉じる (Esc)">
+        <button onClick={onHide} className="icon-button" title="Close (Esc)">
           <X size={16} />
         </button>
       </div>

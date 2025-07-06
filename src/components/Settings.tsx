@@ -16,9 +16,9 @@ const Settings: React.FC<SettingsProps> = ({
 }) => {
   return (
     <div className="settings-panel">
-      <h3>設定</h3>
+      <h3>Settings</h3>
       <div className="setting-item">
-        <label>最大履歴数:</label>
+        <label>History Limit</label>
         <input
           type="number"
           value={config.max_history_count}
@@ -33,7 +33,7 @@ const Settings: React.FC<SettingsProps> = ({
         />
       </div>
       <div className="setting-item">
-        <label>ホットキー:</label>
+        <label>Hotkey:</label>
         <input
           type="text"
           value={config.hotkey}
@@ -42,14 +42,14 @@ const Settings: React.FC<SettingsProps> = ({
           }
           placeholder="CommandOrControl+Shift+V"
         />
-        <small>例: CommandOrControl+Shift+V, Alt+V, Ctrl+Space</small>
+        <small>Examples: CommandOrControl+Shift+V, Alt+V, Ctrl+Space</small>
       </div>
       <div className="setting-actions">
         <button onClick={() => onSave(config)} className="save-button">
-          保存
+          Save
         </button>
         <button onClick={onCancel} className="cancel-button">
-          キャンセル
+          Cancel
         </button>
       </div>
     </div>

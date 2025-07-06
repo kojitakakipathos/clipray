@@ -1,7 +1,7 @@
 import React from "react";
 import { Pin, Copy, Trash2, Image, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { ja } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { ClipboardItem as ClipboardItemData } from "../types";
 
 interface ClipboardItemProps {
@@ -49,15 +49,15 @@ const ClipboardItem: React.FC<ClipboardItemProps> = ({
           <div className="image-item">
             <img
               src={getImagePreview(item.content)}
-              alt="クリップボード画像"
+              alt="Clipboard image"
               className="image-preview"
             />
             <div className="image-meta">
-              <span>画像</span>
+              <span>Image</span>
               <div className="item-meta">
                 {formatDistanceToNow(new Date(item.timestamp), {
                   addSuffix: true,
-                  locale: ja,
+                  locale: enUS,
                 })}
               </div>
             </div>
@@ -68,7 +68,7 @@ const ClipboardItem: React.FC<ClipboardItemProps> = ({
             <div className="item-meta">
               {formatDistanceToNow(new Date(item.timestamp), {
                 addSuffix: true,
-                locale: ja,
+                locale: enUS,
               })}
             </div>
           </div>
@@ -81,7 +81,7 @@ const ClipboardItem: React.FC<ClipboardItemProps> = ({
             onPin(item.id);
           }}
           className={`icon-button ${item.pinned ? "pinned" : ""}`}
-          title={item.pinned ? "ピン留めを解除 (Ctrl+P)" : "ピン留め (Ctrl+P)"}
+          title={item.pinned ? "Unpin (Ctrl+P)" : "Pin (Ctrl+P)"}
         >
           <Pin size={14} />
         </button>
@@ -91,7 +91,7 @@ const ClipboardItem: React.FC<ClipboardItemProps> = ({
             onCopy(item.content, item.content_type);
           }}
           className="icon-button"
-          title="コピーのみ"
+          title="Copy only"
         >
           <Copy size={14} />
         </button>
@@ -101,7 +101,7 @@ const ClipboardItem: React.FC<ClipboardItemProps> = ({
             onDelete(item.id);
           }}
           className="icon-button delete"
-          title="削除 (Delete)"
+          title="Delete (Delete)"
         >
           <Trash2 size={14} />
         </button>

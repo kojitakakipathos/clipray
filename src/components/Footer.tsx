@@ -9,8 +9,8 @@ const Footer: React.FC<FooterProps> = ({ hotkey, itemCount }) => {
   return (
     <div className="footer">
       <span className="footer-text">
-        {hotkey} で起動 | ↑↓で選択 | Enterでコピー&閉じる | Escで閉じる |{" "}
-        {itemCount} 件
+        {hotkey} to launch | ↑↓ to select | Enter to copy & close | Esc to close
+        | {itemCount} items
       </span>
     </div>
   );
