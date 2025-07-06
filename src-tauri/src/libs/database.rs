@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use std::sync::Mutex;
 
 use crate::libs::{
-    constants::DEFAULT_HOTKEY,
+    constants::{DEFAULT_HOTKEY, DEFAULT_MAX_HISTORY_COUNT},
     types::{AppConfig, ClipboardItem},
 };
 
@@ -53,6 +53,9 @@ impl DatabaseManager {
     }
 
     pub fn add_clipboard_item(&self, content: &str, content_type: &str) -> Result<()> {
+        // 履歴数制限を適用（ピン留めされていないもののみ）
+        let max_count: u32 = self.get_max_history_count()?;
+
         let conn = self.connection.lock().unwrap();
         let timestamp = Utc::now().to_rfc3339();
 
@@ -68,15 +71,6 @@ impl DatabaseManager {
             [content, content_type, &timestamp],
         )?;
 
-        // 履歴数制限を適用（ピン留めされていないもののみ）
-        let max_count: i32 = conn
-            .query_row(
-                "SELECT value FROM app_config WHERE key = 'max_history_count'",
-                [],
-                |row| row.get(0),
-            )
-            .unwrap_or(50);
-
         conn.execute(
             "DELETE FROM clipboard_history WHERE id IN (
                 SELECT id FROM clipboard_history 
@@ -91,14 +85,16 @@ impl DatabaseManager {
     }
 
     pub fn get_clipboard_history(&self) -> Result<Vec<ClipboardItem>> {
+        let max_count: u32 = self.get_max_history_count()?;
         let conn = self.connection.lock().unwrap();
         let mut stmt = conn.prepare(
             "SELECT id, content, content_type, timestamp, pinned 
              FROM clipboard_history 
-             ORDER BY pinned DESC, timestamp DESC",
+             ORDER BY pinned DESC, timestamp DESC
+             LIMIT ?1",
         )?;
 
-        let item_iter = stmt.query_map([], |row| {
+        let item_iter = stmt.query_map([max_count], |row| {
             Ok(ClipboardItem {
                 id: row.get(0)?,
                 content: row.get(1)?,
@@ -132,23 +128,8 @@ impl DatabaseManager {
     }
 
     pub fn get_config(&self) -> Result<AppConfig> {
-        let conn = self.connection.lock().unwrap();
-        let max_history_count: i32 = conn
-            .query_row(
-                "SELECT value FROM app_config WHERE key = 'max_history_count'",
-                [],
-                |row| row.get(0),
-            )
-            .unwrap_or(50);
-
-        let hotkey: String = conn
-            .query_row(
-                "SELECT value FROM app_config WHERE key = 'hotkey'",
-                [],
-                |row| row.get(0),
-            )
-            .unwrap_or_else(|_| DEFAULT_HOTKEY.to_string());
-
+        let max_history_count: u32 = self.get_max_history_count()?;
+        let hotkey: String = self.get_hotkey()?;
         Ok(AppConfig {
             max_history_count,
             hotkey,
@@ -166,5 +147,36 @@ impl DatabaseManager {
             [&config.hotkey],
         )?;
         Ok(())
+    }
+
+    pub fn get_hotkey(&self) -> Result<String> {
+        let conn = self.connection.lock().unwrap();
+        let hotkey: String = conn
+            .query_row(
+                "SELECT value FROM app_config WHERE key = 'hotkey'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or_else(|_| DEFAULT_HOTKEY.to_string());
+        Ok(hotkey)
+    }
+
+    /// get max history count from app_config
+    pub fn get_max_history_count(&self) -> Result<u32> {
+        let conn = self.connection.lock().unwrap();
+        let value_str: String = conn
+            .query_row(
+                "SELECT value FROM app_config WHERE key = 'max_history_count'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or_else(|_| DEFAULT_MAX_HISTORY_COUNT.to_string());
+
+        let max_history_count = value_str.parse::<u32>().unwrap_or_else(|e| {
+            eprintln!("Failed to parse max_history_count: {}", e);
+            DEFAULT_MAX_HISTORY_COUNT
+        });
+
+        Ok(max_history_count)
     }
 }

@@ -11,6 +11,6 @@ pub struct ClipboardItem {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AppConfig {
-    pub max_history_count: i32,
+    pub max_history_count: u32,
     pub hotkey: String,
 }
