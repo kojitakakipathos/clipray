@@ -9,6 +9,11 @@ export const THEME_NAMES = {
 // Theme ENUM
 export type ThemePreset = (typeof THEME_NAMES)[keyof typeof THEME_NAMES];
 
+// Theme configuration interface (matching backend)
+export interface ThemeConfig {
+  preset: ThemePreset;
+}
+
 // Theme display names
 export const THEME_DISPLAY_NAMES: Record<ThemePreset, string> = {
   [THEME_NAMES.DEFAULT]: "Default",
