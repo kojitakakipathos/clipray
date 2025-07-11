@@ -33,7 +33,7 @@ export const useClipboard = () => {
     }
   };
 
-  // アイテムをクリップボードにコピー
+  // Copy item to clipboard
   const copyToClipboard = async (
     content: string,
     contentType: string = "text"

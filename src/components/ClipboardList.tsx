@@ -12,6 +12,7 @@ interface ClipboardListProps {
   onDelete: (id: number) => void;
   selectedItemRef: React.RefObject<HTMLDivElement>;
   listRef: React.RefObject<HTMLDivElement>;
+  activeTab?: "pinned" | "history";
 }
 
 const ClipboardList: React.FC<ClipboardListProps> = ({
@@ -23,9 +24,10 @@ const ClipboardList: React.FC<ClipboardListProps> = ({
   onDelete,
   selectedItemRef,
   listRef,
+  activeTab = "history",
 }) => {
   if (items.length === 0) {
-    return <EmptyState />;
+    return <EmptyState activeTab={activeTab} />;
   }
 
   return (
