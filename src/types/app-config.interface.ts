@@ -1,8 +1,4 @@
-import { ThemePreset } from "./theme";
-
-export interface ThemeConfig {
-  preset: ThemePreset;
-}
+import { ThemeConfig } from "./theme";
 
 export interface AppConfig {
   max_history_count: number;

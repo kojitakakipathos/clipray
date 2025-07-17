@@ -15,6 +15,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<"pinned" | "history">("history"); // Add: tab state
   const [originalConfig, setOriginalConfig] = useState<typeof config | null>(
     null
   );
@@ -47,9 +48,24 @@ function App() {
     return item.content.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
+  // Tab filter - filter pinned/history items based on activeTab
+  const tabFilteredItems = filteredItems.filter((item) => {
+    if (activeTab === "pinned") {
+      return item.pinned;
+    } else {
+      return !item.pinned;
+    }
+  });
+
   const resetSearch = () => {
     setSearchQuery("");
     setSelectedIndex(0);
+    setActiveTab("history"); // Return to history tab when resetting search
+  };
+
+  const handleTabChange = (tab: "pinned" | "history") => {
+    setActiveTab(tab);
+    setSelectedIndex(0); // Reset selected index when switching tabs
   };
 
   // Keyboard navigation
@@ -57,7 +73,7 @@ function App() {
     showSettings,
     selectedIndex,
     setSelectedIndex,
-    filteredItems,
+    filteredItems: tabFilteredItems,
     copyAndHide,
     deleteItem,
     togglePin,
@@ -65,6 +81,8 @@ function App() {
     setShowSettings,
     resetSearch,
     setShowExitModal,
+    activeTab,
+    handleTabChange,
   });
 
   // Hotkey display listener
@@ -91,10 +109,10 @@ function App() {
 
   // Adjust selected index
   useEffect(() => {
-    if (selectedIndex >= filteredItems.length) {
-      setSelectedIndex(Math.max(0, filteredItems.length - 1));
+    if (selectedIndex >= tabFilteredItems.length) {
+      setSelectedIndex(Math.max(0, tabFilteredItems.length - 1));
     }
-  }, [filteredItems.length, selectedIndex]);
+  }, [tabFilteredItems.length, selectedIndex]);
 
   // Auto-scroll to display selected item within the screen
   useEffect(() => {
@@ -123,7 +141,7 @@ function App() {
         containerElement.scrollTop = selectedBottom - containerHeight + 8; // 8px margin
       }
     }
-  }, [selectedIndex, filteredItems]);
+  }, [selectedIndex, tabFilteredItems]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -132,7 +150,7 @@ function App() {
 
   const handleItemClick = (index: number) => {
     setSelectedIndex(index);
-    const item = filteredItems[index];
+    const item = tabFilteredItems[index];
     copyAndHide(item.content, item.content_type);
     resetSearch(); // Reset search
   };
@@ -182,6 +200,24 @@ function App() {
         searchInputRef={searchInputRef}
       />
 
+      {/* Tab UI */}
+      <div className="tabs-container">
+        <div className="tabs">
+          <button
+            className={`tab ${activeTab === "history" ? "active" : ""}`}
+            onClick={() => handleTabChange("history")}
+          >
+            History ({clipboardItems.filter((item) => !item.pinned).length})
+          </button>
+          <button
+            className={`tab ${activeTab === "pinned" ? "active" : ""}`}
+            onClick={() => handleTabChange("pinned")}
+          >
+            Pinned ({pinnedItemsCount})
+          </button>
+        </div>
+      </div>
+
       {showSettings && (
         <Settings
           config={config}
@@ -200,7 +236,7 @@ function App() {
       />
 
       <ClipboardList
-        items={filteredItems}
+        items={tabFilteredItems}
         selectedIndex={selectedIndex}
         onItemClick={handleItemClick}
         onPin={togglePin}
@@ -208,10 +244,11 @@ function App() {
         onDelete={deleteItem}
         selectedItemRef={selectedItemRef}
         listRef={clipboardListRef}
+        activeTab={activeTab}
       />
 
-      {filteredItems.length > 0 && (
-        <Footer hotkey={config.hotkey} itemCount={filteredItems.length} />
+      {tabFilteredItems.length > 0 && (
+        <Footer hotkey={config.hotkey} itemCount={tabFilteredItems.length} />
       )}
     </div>
   );

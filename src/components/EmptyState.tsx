@@ -1,14 +1,16 @@
 import React from "react";
 
-const EmptyState: React.FC = () => {
+interface EmptyStateProps {
+  activeTab?: "pinned" | "history";
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({ activeTab = "history" }) => {
+  const message =
+    activeTab === "pinned" ? "No pinned items" : "No clipboard history";
+
   return (
     <div className="empty-state">
-      <p>No clipboard history</p>
-      <p className="empty-hint">
-        Copy something and it will appear here
-        <br />
-        Supports text and images
-      </p>
+      <p>{message}</p>
     </div>
   );
 };

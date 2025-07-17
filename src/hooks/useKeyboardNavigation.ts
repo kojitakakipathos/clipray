@@ -13,6 +13,8 @@ interface UseKeyboardNavigationProps {
   setShowSettings: (show: boolean) => void;
   resetSearch: () => void;
   setShowExitModal: (show: boolean) => void;
+  activeTab: "pinned" | "history";
+  handleTabChange: (tab: "pinned" | "history") => void;
 }
 
 export const useKeyboardNavigation = ({
@@ -27,6 +29,8 @@ export const useKeyboardNavigation = ({
   setShowSettings,
   resetSearch,
   setShowExitModal,
+  activeTab,
+  handleTabChange,
 }: UseKeyboardNavigationProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -42,6 +46,14 @@ export const useKeyboardNavigation = ({
 
       // Disabled in settings screen
       if (showSettings) return;
+
+      // Tab switching with Ctrl+Tab
+      if (event.ctrlKey && event.key === "Tab") {
+        event.preventDefault();
+        const nextTab = activeTab === "history" ? "pinned" : "history";
+        handleTabChange(nextTab);
+        return;
+      }
 
       if (event.key === "ArrowDown") {
         event.preventDefault();
@@ -98,5 +110,8 @@ export const useKeyboardNavigation = ({
     hideWindow,
     setShowSettings,
     resetSearch,
+    setShowExitModal,
+    activeTab,
+    handleTabChange,
   ]);
 };
