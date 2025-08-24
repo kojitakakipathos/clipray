@@ -77,7 +77,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bump up patch version
-        run: npm version patch --no-git-tag-version
+        run: |
+          # Update package.json version
+          npm version patch --no-git-tag-version
+
+          # Update tauri.conf.json version
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          jq --arg version "$CURRENT_VERSION" '.version = $version' src-tauri/tauri.conf.json > temp_tauri.conf.json
+          mv temp_tauri.conf.json src-tauri/tauri.conf.json
 
       - name: Get next version
         run: |
@@ -92,7 +99,7 @@ jobs:
 
       - name: Update package version
         run: |
-          git add package*.json
+          git add package*.json src-tauri/tauri.conf.json
           git commit -m "[chore] bump version to v${{ env.NEXT_VERSION }}" --no-verify
           git push origin ${{ env.NEXT_HOTFIX_BRANCH }} --no-verify
 
@@ -106,6 +113,8 @@ jobs:
 
           **Changes:**
           - Bumped patch version after merge to main
+          - Updated \`package.json\` version
+          - Updated \`src-tauri/tauri.conf.json\` version
           - Created hotfix branch: \`${{ env.NEXT_HOTFIX_BRANCH }}\`
 
           **Date:** ${TODAY}
