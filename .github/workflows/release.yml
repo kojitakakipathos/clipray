@@ -54,8 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: "Clipray v__VERSION__"
-          releaseBody: "See the assets to download this version and install."
-          releaseDraft: true
+          releaseName: "v__VERSION__"
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
