@@ -42,7 +42,7 @@ function App() {
 
   // Search filter
   const filteredItems = clipboardItems.filter((item) => {
-    if (item.content_type === "image") {
+    if (item.content_type === "image" && searchQuery.length > 0) {
       return false; // Hide images from search results
     }
     return item.content.toLowerCase().includes(searchQuery.toLowerCase());
