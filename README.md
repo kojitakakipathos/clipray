@@ -1,205 +1,171 @@
 # Clipray 📋
 
-[![Test](https://github.com/yourusername/clipray/workflows/Test/badge.svg)](https://github.com/yourusername/clipray/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/yourusername/clipray/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/clipray)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Publish](https://github.com/kojitakakipathos/clipray/actions/workflows/release.yml/badge.svg)](https://github.com/kojitakakipathos/clipray/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A lightweight, cross-platform clipboard manager built with Tauri and React. Clipray provides a seamless clipboard history experience similar to Windows' "Windows + V" functionality, but available on Windows, macOS, and Linux.
+A lightweight, cross-platform clipboard manager built with **Tauri v2** and **React**. Clipray keeps clipboard history locally (SQLite) and opens a floating window via a global shortcut (default: `Ctrl+Shift+V` on Windows/Linux).
 
 ## ✨ Features
 
-- **📋 Clipboard History**: Automatically saves text and image clipboard content
-- **⚡ Quick Access**: Invoke with customizable global hotkeys (default: `Ctrl+Shift+V`)
-- **🔍 Smart Search**: Filter clipboard history with real-time search
-- **📌 Pin Items**: Mark important items as favorites to prevent auto-deletion
-- **🖼️ Image Support**: Store and preview clipboard images
-- **🎨 Theme Support**: Multiple built-in themes for personalization
-- **⚙️ Configurable**: Customize history limit, hotkeys, and appearance
-- **🔒 Privacy-First**: All data stored locally, no external data transmission
-- **🌐 Cross-Platform**: Native support for Windows, macOS, and Linux
+- **📋 Clipboard history**: Saves text and image clipboard content locally
+- **⚡ Quick access**: Global shortcut to show/hide the window (default: `Ctrl+Shift+V`)
+- **🔍 Search**: Filter history in real time
+- **📌 Pin items**: Pin important entries so they are not trimmed by the history limit
+- **🖼️ Images**: Store and preview clipboard images (as local data)
+- **🎨 Themes**: Built-in theme presets
+- **⚙️ Configurable**: History limit, hotkey, theme, and start-on-boot (where supported)
+- **🔒 Local-first**: Clipboard data stays on your machine; see [Privacy](#privacy) below
+- **🌐 Cross-platform**: Windows, macOS, and Linux (build targets depend on your release pipeline)
 
 ## 🚀 Installation
 
-### Download Pre-built Binaries
+### Pre-built binaries
 
-Visit the [Releases](https://github.com/yourusername/clipray/releases) page to download the latest version for your platform:
+Download builds from [Releases](https://github.com/kojitakakipathos/clipray/releases) when available. Asset names may vary by CI configuration and Tauri bundle format (e.g. `.msi`, `.dmg`, `.AppImage`, `.deb`).
 
-- **Windows**: `clipray-setup.exe`
-- **macOS**: `clipray.dmg`
-- **Linux**: `clipray.AppImage` or `clipray.deb`
-
-### Build from Source
+### Build from source
 
 #### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Node.js](https://nodejs.org/) **18+** recommended (this repo uses Vite 6)
 - [Rust](https://rustup.rs/) (latest stable)
-- [Tauri CLI](https://tauri.app/v1/guides/getting-started/prerequisites)
+- [Tauri v2 system prerequisites](https://tauri.app/start/prerequisites/) (especially on Linux: WebKitGTK and related packages)
+
+You do **not** need a global Tauri CLI install for normal development: the CLI is pulled in via npm (`@tauri-apps/cli`) when you run the scripts below.
 
 #### Steps
 
-1. Clone the repository:
-
 ```bash
-git clone https://github.com/yourusername/clipray.git
+git clone https://github.com/kojitakakipathos/clipray.git
 cd clipray
-```
-
-2. Install dependencies:
-
-```bash
 npm install
+npm run build:release
 ```
 
-3. Build the application:
-
-```bash
-npm run tauri --release
-```
-
-The built application will be available in `src-tauri/target/release/bundle/`.
+Release bundles are produced under `src-tauri/target/release/bundle/` (paths depend on OS).
 
 ## 📖 Usage
 
-### Basic Usage
+### Basic usage
 
-1. **Start Clipray**: Launch the application (it will run in the background)
-2. **Copy Content**: Copy text or images as usual (`Ctrl+C` / `Cmd+C`)
-3. **Access History**: Press `Ctrl+Shift+V` (or your configured hotkey)
-4. **Select Item**: Use arrow keys or click to select from history
-5. **Paste**: Press `Enter` or click to paste the selected item
+1. **Start Clipray** and keep it running (tray/background behavior depends on platform)
+2. **Copy** text or images as usual (`Ctrl+C` / `Cmd+C`)
+3. **Open history** with your configured shortcut (default `Ctrl+Shift+V`)
+4. **Navigate** with arrow keys or the mouse
+5. **Paste** the selected item with `Enter` (or use the UI actions shown in the app)
 
-### Keyboard Shortcuts
+### Keyboard shortcuts (in-app)
 
-| Shortcut       | Action                  |
-| -------------- | ----------------------- |
-| `Ctrl+Shift+V` | Open clipboard history  |
-| `↑/↓`          | Navigate through items  |
-| `Enter`        | Paste selected item     |
-| `Delete`       | Delete selected item    |
-| `Ctrl+P`       | Pin/unpin selected item |
-| `Escape`       | Close window            |
-| `Ctrl+I`       | Open settings           |
+These shortcuts are handled in the desktop window (see `src/hooks/useKeyboardNavigation.ts`). On macOS, **`Control`** is used for `Ctrl+*` bindings below (not `Command`).
+
+| Shortcut        | Action                         |
+| --------------- | -------------------------------- |
+| _Configured_    | Open/toggle clipboard window (global; default `Ctrl+Shift+V`) |
+| `↑` / `↓`       | Move selection                   |
+| `Enter`         | Copy selected item and hide window |
+| `Delete`        | Delete selected item             |
+| `Ctrl+P`        | Pin / unpin selected item        |
+| `Ctrl+Tab`      | Switch between History / Pinned tabs |
+| `Ctrl+I`        | Open / close settings            |
+| `Escape`        | Close settings or hide window    |
 
 ### Settings
 
-Access settings by pressing `Ctrl+S` or clicking the gear icon:
+Open settings with **`Ctrl+I`** or the gear icon in the header.
 
-- **History Limit**: Set maximum number of items to store (default: 50)
-- **Global Hotkey**: Customize the activation shortcut
-- **Theme**: Choose from available themes
-- **Auto-start**: Enable/disable startup with system
+- **History limit**: Maximum items to keep
+- **Global hotkey**: Shortcut registered with the OS (examples: `CommandOrControl+Shift+V`, `Alt+V`, `Ctrl+Space`)
+- **Theme**: UI preset
+- **Start on boot**: Launch with the system (platform-dependent)
 
 ## 🛠️ Development
 
-### Development Setup
+### Development setup
 
-1. Clone and install dependencies:
+1. Install prerequisites above (Node **18+**, Rust stable, and Tauri system dependencies).
+2. Install JavaScript dependencies:
 
 ```bash
-git clone https://github.com/yourusername/clipray.git
+git clone https://github.com/kojitakakipathos/clipray.git
 cd clipray
 npm install
 ```
 
-2. Start development server:
+3. Run the full desktop app in dev mode (frontend + Rust backend, hot reload):
 
 ```bash
 npm run tauri dev
 ```
 
-### Project Structure
+4. (Optional) Frontend-only Vite server:
+
+```bash
+npm run dev
+```
+
+This serves the React UI only; Tauri IPC and clipboard features need `npm run tauri dev`.
+
+### Project structure
 
 ```
 clipray/
-├── src/                    # React frontend
-│   ├── components/         # UI components
-│   ├── hooks/             # Custom React hooks
-│   ├── types/             # TypeScript type definitions
-│   └── utils/             # Utility functions
-├── src-tauri/             # Rust backend
-│   ├── src/libs/          # Core functionality
-│   │   ├── clipboard.rs   # Clipboard monitoring
-│   │   ├── database.rs    # SQLite database
-│   │   └── commands.rs    # Tauri commands
-│   └── tauri.conf.json    # Tauri configuration
-└── package.json           # Node.js dependencies
+├── src/                 # React (Vite) frontend
+│   ├── components/
+│   ├── hooks/
+│   ├── types/
+│   └── utils/
+├── src-tauri/           # Rust + Tauri backend
+│   ├── src/libs/        # Clipboard, SQLite, commands, etc.
+│   └── tauri.conf.json
+├── package.json
+└── package-lock.json
 ```
 
-### Available Scripts
+### Scripts
 
-#### Development
+| Script | Description |
+| ------ | ----------- |
+| `npm run dev` | Vite dev server (UI only) |
+| `npm run build` | Typecheck + production frontend build |
+| `npm run tauri dev` | Tauri dev mode (recommended for feature work) |
+| `npm run build:release` | Production Tauri build for the current platform |
+| `npm run test` | Rust tests (`src-tauri`, `test-utils` feature) |
 
-- `npm run dev` - Start Vite development server
-- `npm run build` - Build frontend for production
-- `npm run tauri dev` - Start Tauri development mode
-- `npm run build:release` - Build release version
+Run a single Rust test:
 
-#### Testing
+```bash
+cd src-tauri && cargo test --features test-utils -- <test_name>
+```
 
-- `npm run test` - Run all tests
+High-level architecture notes for contributors: [CLAUDE.md](CLAUDE.md).
+
+### Privacy
+
+Clipray stores clipboard history in a **local SQLite database** on your device. This repository’s application code is intended to operate **without sending clipboard contents to remote servers**. If you find behavior that contradicts this, please open an issue.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these guidelines:
-
-### Getting Started
+Contributions are welcome.
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes
-4. Test thoroughly
-5. Commit with clear messages: `git commit -m 'Add amazing feature'`
-6. Push to your fork: `git push origin feature/amazing-feature`
-7. Open a Pull Request
+2. Create a branch: `git checkout -b feature/your-change`
+3. Make changes and run `npm run test` (and manual testing with `npm run tauri dev`)
+4. Open a Pull Request
 
-### Development Guidelines
-
-- Follow the existing code style
-- Write clear commit messages
-- Add tests for new features
-- Update documentation as needed
-- Ensure cross-platform compatibility
-
-### Bug Reports
-
-When reporting bugs, please include:
-
-- Operating system and version
-- Clipray version
-- Steps to reproduce
-- Expected vs actual behavior
-- Screenshots (if applicable)
-
-### Feature Requests
-
-We love new ideas! Please:
-
-- Check existing issues first
-- Describe the feature clearly
-- Explain the use case
-- Consider implementation complexity
+For bugs, include OS version, app version, and steps to reproduce.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — see [LICENSE](LICENSE).
 
 ## 🙏 Acknowledgments
 
-- Built with [Tauri](https://tauri.app/) for cross-platform desktop apps
-- UI powered by [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/)
-- Icons from [Lucide](https://lucide.dev/)
-- Database powered by [SQLite](https://sqlite.org/)
+- [Tauri](https://tauri.app/)
+- [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/)
+- [Lucide](https://lucide.dev/)
+- [SQLite](https://sqlite.org/)
 
 ## 🔗 Links
 
-- [Documentation](https://github.com/yourusername/clipray/wiki)
-- [Issue Tracker](https://github.com/yourusername/clipray/issues)
-- [Discussions](https://github.com/yourusername/clipray/discussions)
+- [Issues](https://github.com/kojitakakipathos/clipray/issues)
 - [Changelog](CHANGELOG.md)
-
----
-
-<p align="center">
-  Made with ❤️ by the Clipray team
-</p>
