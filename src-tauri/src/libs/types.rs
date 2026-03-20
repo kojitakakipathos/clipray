@@ -50,4 +50,5 @@ pub struct AppConfig {
     pub max_history_count: u32,
     pub hotkey: String,
     pub theme: ThemeConfig,
+    pub autostart: bool,
 }

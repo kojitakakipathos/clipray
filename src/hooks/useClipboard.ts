@@ -11,6 +11,7 @@ export const useClipboard = () => {
     theme: {
       preset: "default",
     },
+    autostart: false,
   });
 
   // Get clipboard history

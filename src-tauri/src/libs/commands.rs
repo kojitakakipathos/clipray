@@ -1,4 +1,5 @@
 use tauri::{AppHandle, Manager, State, Window, Wry};
+use tauri_plugin_autostart::ManagerExt;
 use tauri_plugin_clipboard::Clipboard;
 
 use crate::libs::clipboard::copy_to_clipboard_impl;
@@ -74,6 +75,20 @@ pub async fn update_config(
     // Re-register hotkey if changed
     if current_config.hotkey != config.hotkey {
         update_hotkey(&app_handle, &current_config.hotkey, &config.hotkey)?;
+    }
+
+    // Toggle autostart if changed
+    if current_config.autostart != config.autostart {
+        let autostart_manager = app_handle.autolaunch();
+        if config.autostart {
+            autostart_manager
+                .enable()
+                .map_err(|e| format!("Failed to enable autostart: {}", e))?;
+        } else {
+            autostart_manager
+                .disable()
+                .map_err(|e| format!("Failed to disable autostart: {}", e))?;
+        }
     }
 
     // Save configuration

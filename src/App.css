@@ -325,6 +325,12 @@ body:not([data-theme]) .empty-hint {
   margin-top: 4px;
 }
 
+.setting-item.setting-item-inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
 /* テーマセクション */
 .theme-section {
   margin-bottom: 16px;
