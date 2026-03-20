@@ -43,6 +43,7 @@ export const useClipboard = () => {
       setConfig({
         max_history_count: 50,
         hotkey: "CommandOrControl+Shift+V",
+        autostart: false,
         theme: {
           preset: "default",
         },
