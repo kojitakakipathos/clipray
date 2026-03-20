@@ -18,9 +18,11 @@ export const useClipboard = () => {
   const loadClipboardHistory = async () => {
     try {
       const items = await invoke<ClipboardItem[]>("get_clipboard_history");
-      setClipboardItems(items);
+      setClipboardItems(items || []);
     } catch (error) {
       console.error("Failed to load clipboard history:", error);
+      // Set empty array as fallback
+      setClipboardItems([]);
     }
   };
 
@@ -28,9 +30,23 @@ export const useClipboard = () => {
   const loadConfig = async () => {
     try {
       const appConfig = await invoke<AppConfig>("get_config");
-      setConfig(appConfig);
+      setConfig(appConfig || {
+        max_history_count: 50,
+        hotkey: "CommandOrControl+Shift+V",
+        theme: {
+          preset: "default",
+        },
+      });
     } catch (error) {
       console.error("Failed to load config:", error);
+      // Use default config as fallback
+      setConfig({
+        max_history_count: 50,
+        hotkey: "CommandOrControl+Shift+V",
+        theme: {
+          preset: "default",
+        },
+      });
     }
   };
 
@@ -41,8 +57,12 @@ export const useClipboard = () => {
   ) => {
     try {
       await invoke("copy_to_clipboard", { content, contentType });
+      // Reload history to show the copied item
+      await loadClipboardHistory();
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
+      // Show user-friendly error message
+      alert("Failed to copy to clipboard. Please try again.");
     }
   };
 
@@ -52,6 +72,8 @@ export const useClipboard = () => {
       await invoke("copy_and_hide", { content, contentType });
     } catch (error) {
       console.error("Failed to copy and hide:", error);
+      // Show user-friendly error message
+      alert("Failed to copy to clipboard. Please try again.");
     }
   };
 

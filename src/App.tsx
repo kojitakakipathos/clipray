@@ -43,7 +43,15 @@ function App() {
   // Search filter
   const filteredItems = clipboardItems.filter((item) => {
     if (item.content_type === "image") {
-      return true; // Always show images
+      if (
+        searchQuery.toLowerCase().startsWith("image") ||
+        searchQuery.length === 0
+      ) {
+        return true;
+      }
+
+      // Hide images from search results
+      return false;
     }
     return item.content.toLowerCase().includes(searchQuery.toLowerCase());
   });
