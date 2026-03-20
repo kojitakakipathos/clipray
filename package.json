@@ -1,7 +1,7 @@
 {
   "name": "clipray",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "build:release": "tauri build --release",
-    "test": "cd src-tauri && cargo test --features test-utils && cd .."
+    "test": "cd src-tauri && cargo test --features test-utils && cd ..",
+    "bunp-up-version": "sh ./tools/bunp-up-version.sh patch"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
@@ -30,4 +31,3 @@
     "vite": "^6.0.3"
   }
 }
-
