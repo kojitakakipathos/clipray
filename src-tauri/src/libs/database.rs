@@ -50,20 +50,8 @@ impl DatabaseManager {
             "INSERT OR IGNORE INTO app_config (key, value) VALUES ('theme_preset', 'default')",
             [],
         );
-
-        // Migrate 'dark' theme to 'deep-purple'
         let _ = conn.execute(
-            "UPDATE app_config SET value = 'deep-purple' WHERE key = 'theme_preset' AND value = 'dark'",
-            [],
-        );
-
-        // Migrate 'light' theme to 'default' and 'default' to 'purple-gradient'
-        let _ = conn.execute(
-            "UPDATE app_config SET value = 'purple-gradient' WHERE key = 'theme_preset' AND value = 'default'",
-            [],
-        );
-        let _ = conn.execute(
-            "UPDATE app_config SET value = 'default' WHERE key = 'theme_preset' AND value = 'light'",
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('autostart', 'false')",
             [],
         );
 
@@ -151,10 +139,12 @@ impl DatabaseManager {
         let max_history_count: u32 = self.get_max_history_count()?;
         let hotkey: String = self.get_hotkey()?;
         let theme: ThemeConfig = self.get_theme()?;
+        let autostart: bool = self.get_autostart()?;
         Ok(AppConfig {
             max_history_count,
             hotkey,
             theme,
+            autostart,
         })
     }
 
@@ -171,6 +161,10 @@ impl DatabaseManager {
         conn.execute(
             "UPDATE app_config SET value = ?1 WHERE key = 'theme_preset'",
             [config.theme.preset.as_str()],
+        )?;
+        conn.execute(
+            "UPDATE app_config SET value = ?1 WHERE key = 'autostart'",
+            [config.autostart.to_string()],
         )?;
         Ok(())
     }
@@ -222,6 +216,19 @@ impl DatabaseManager {
         Ok(ThemeConfig { preset })
     }
 
+    /// get autostart setting from app_config
+    fn get_autostart(&self) -> Result<bool> {
+        let conn = self.connection.lock().unwrap();
+        let value_str: String = conn
+            .query_row(
+                "SELECT value FROM app_config WHERE key = 'autostart'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap_or_else(|_| "false".to_string());
+        Ok(value_str == "true")
+    }
+
     /// Create a test database in memory for testing purposes
     #[cfg(any(test, feature = "test-utils"))]
     pub fn new_test() -> Result<Self> {
@@ -258,6 +265,10 @@ impl DatabaseManager {
         );
         let _ = conn.execute(
             "INSERT OR IGNORE INTO app_config (key, value) VALUES ('theme_preset', 'default')",
+            [],
+        );
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO app_config (key, value) VALUES ('autostart', 'false')",
             [],
         );
 

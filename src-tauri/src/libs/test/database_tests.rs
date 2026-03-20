@@ -13,6 +13,7 @@ mod tests {
         assert_eq!(config.max_history_count, 50);
         assert_eq!(config.hotkey, DEFAULT_HOTKEY);
         assert_eq!(config.theme.preset, ThemePreset::Default);
+        assert!(!config.autostart);
     }
 
     #[test]
@@ -145,6 +146,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::Default,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -171,6 +173,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::Default,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -219,6 +222,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::DeepPurple,
             },
+            autostart: false,
         };
 
         let result = db.update_config(&new_config);
@@ -246,6 +250,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::Default,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -268,6 +273,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::Default,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -290,6 +296,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::MidnightBlue,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -319,5 +326,40 @@ mod tests {
 
         assert_eq!(text_item.content, "text content");
         assert_eq!(image_item.content, "image data");
+    }
+
+    #[test]
+    #[serial]
+    fn test_autostart_default_is_false() {
+        let db = DatabaseManager::new_test().unwrap();
+        let config = db.get_config().unwrap();
+        assert!(!config.autostart);
+    }
+
+    #[test]
+    #[serial]
+    fn test_update_autostart_true() {
+        let db = DatabaseManager::new_test().unwrap();
+        let mut config = db.get_config().unwrap();
+        config.autostart = true;
+        db.update_config(&config).unwrap();
+
+        let reloaded = db.get_config().unwrap();
+        assert!(reloaded.autostart);
+    }
+
+    #[test]
+    #[serial]
+    fn test_update_autostart_false() {
+        let db = DatabaseManager::new_test().unwrap();
+        let mut config = db.get_config().unwrap();
+        config.autostart = true;
+        db.update_config(&config).unwrap();
+
+        config.autostart = false;
+        db.update_config(&config).unwrap();
+
+        let reloaded = db.get_config().unwrap();
+        assert!(!reloaded.autostart);
     }
 }

@@ -108,6 +108,16 @@ const Settings: React.FC<SettingsProps> = ({
         />
         <small>Examples: CommandOrControl+Shift+V, Alt+V, Ctrl+Space</small>
       </div>
+      <div className="setting-item setting-item-inline">
+        <label>Start on boot</label>
+        <input
+          type="checkbox"
+          checked={config.autostart}
+          onChange={(e) =>
+            onConfigChange({ ...config, autostart: e.target.checked })
+          }
+        />
+      </div>
       <div className="setting-actions">
         <button onClick={() => onSave(config)} className="save-button">
           Save

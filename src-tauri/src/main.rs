@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use tauri::Manager;
+use tauri_plugin_autostart::MacosLauncher;
 
 pub mod libs;
 
@@ -20,6 +21,8 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard::init())
         .plugin(tauri_plugin_global_shortcut::Builder::default().build())
         .plugin(tauri_plugin_window_state::Builder::default().build())
+        // MacosLauncher::LaunchAgent is the macOS launch method; ignored on Windows/Linux
+        .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
         .setup(|app| {
             let app_handle = app.handle();
             let db_path = app_handle.path().app_data_dir().unwrap().join("clipray.db");

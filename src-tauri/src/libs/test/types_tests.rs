@@ -62,6 +62,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::MidnightBlue,
             },
+            autostart: false,
         };
 
         assert_eq!(app_config.max_history_count, 25);
@@ -128,6 +129,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::DeepPurple,
             },
+            autostart: false,
         };
 
         // Test JSON serialization
@@ -137,5 +139,6 @@ mod tests {
         assert_eq!(app_config.max_history_count, deserialized.max_history_count);
         assert_eq!(app_config.hotkey, deserialized.hotkey);
         assert_eq!(app_config.theme.preset, deserialized.theme.preset);
+        assert_eq!(app_config.autostart, deserialized.autostart);
     }
 }

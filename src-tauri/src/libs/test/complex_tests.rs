@@ -50,6 +50,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::DeepPurple,
             },
+            autostart: false,
         };
 
         db.update_config(&new_config).unwrap();
@@ -72,6 +73,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::Default,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -102,6 +104,7 @@ mod tests {
             theme: ThemeConfig {
                 preset: ThemePreset::Default,
             },
+            autostart: false,
         };
         db.update_config(&config).unwrap();
 
@@ -190,6 +193,7 @@ mod tests {
                 theme: ThemeConfig {
                     preset: theme.clone(),
                 },
+                autostart: false,
             };
 
             db.update_config(&config).unwrap();
